@@ -1,58 +1,57 @@
-#include<bits/stdc++.h>
+#include <bits/stdc++.h>
 using namespace std;
 
 const int N = 55;
-string mode[N];
-string t, tmp;
-string p[N];
-string orig[N];
-int n;
-
-int cha = 'A' - 'a';
+string origin[N];
+string stud[N];
+string model[N];
+string t;
+char cha = 'A' - 'a';
 
 int main(){
+    int n;
     cin >> n;
-    int i , cnt = 0;
-    for(i = 1; i <= n; i++) {
-        cin >> p[i];
-        orig[i] = p[i];
-    }
-    cin >> tmp;
-    i = 0;
-    while(i < tmp.size()){
-        if(tmp[i] == '['){
-            cnt++;
-            t += " ";
-            while (i < tmp.size() && tmp[++i] != ']') mode[cnt] += tmp[i];
-            i++;
-            if(i >= tmp.size()) break;
+    for(int i = 0; i < n; i++){
+        cin >> origin[i];
+        for(int j = 0; j < origin[i].length(); j++){
+            stud[i] += (origin[i][j] >= 'A' && origin[i][j] <= 'Z') ? origin[i][j] - cha: origin[i][j];
         }
-        t += tmp[i++];
     }
-    for(int j = 0; j < t.size(); j++){
-        if(t[j] >= 'A' && t[j] <= 'Z') t[j] -= cha;
+    cin >> t;
+    int cnt = 0;
+    string target;
+    int k = 0;
+    while(k < t.length()){
+        if(t[k] >= 'A' && t[k] <= 'Z') t[k] -= cha;
+        if(t[k] == '['){
+            while (t[++k] != ']') model[cnt] += t[k];
+            cnt++;
+            k++;
+            target += " ";
+            if(k >= t.length()) break;
+        }
+        target += t[k++];
     }
-    for(i = 1; i <= n; i++){
-        int ti = 0, pi = 0, mode_cnt = 1;
-        bool match = true;
-        if(t.size() != p[i].size()) continue;
-        while (ti < t.size()){
-            if(p[i][pi] >= 'A' && p[i][pi] <= 'Z') p[i][pi] -= (cha);
-            if(t[ti] == ' '){
-                if(mode[mode_cnt].find(p[i][pi]) == mode[mode_cnt].npos){
-                    match = false;
-                    break;
+
+    for(int i = 0; i < n; i++){
+        if(stud[i].length() != target.length()) continue;
+        int mdcnt = 0;
+        bool flag = true;
+        for(int j = 0; j < target.length(); j++){
+            if(target[j] == ' '){
+                if(model[mdcnt].find(stud[i][j]) == model[mdcnt].npos){
+                   flag = false;
+                break; 
                 }
-                mode_cnt++;
+                mdcnt++;
             }
-            else if(t[ti] != p[i][pi]){
-                match = false;
+            else if(target[j] != stud[i][j]){
+                flag = false;
                 break;
             }
-            ti++; pi++;
         }
-        if(match){
-            cout << i << " " << orig[i] << "\n";
+        if(flag){
+            cout << i + 1 << " " << origin[i] << "\n";
         }
     }
 }
